@@ -7,23 +7,36 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 const createPrismaClient = (): PrismaClient => {
-  const url = process.env.DATABASE_URL || '';
-  const authToken = process.env.TURSO_AUTH_TOKEN || process.env.DATABASE_AUTH_TOKEN;
+  const tursoUrl = process.env.TURSO_DATABASE_URL || '';
+  const databaseUrl = process.env.DATABASE_URL || '';
 
-  // If deployed on Vercel with Turso / LibSQL URL
-  if (url.startsWith('libsql://') || url.startsWith('https://')) {
-    const libsql = createClient({
-      url,
-      authToken,
-    });
-    const adapter = new PrismaLibSQL(libsql as any);
-    return new PrismaClient({
-      adapter,
-      log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    });
+  // Detect remote Turso/LibSQL URL
+  const remoteUrl = tursoUrl.startsWith('libsql://') || tursoUrl.startsWith('https://')
+    ? tursoUrl
+    : (databaseUrl.startsWith('libsql://') || databaseUrl.startsWith('https://'))
+    ? databaseUrl
+    : '';
+
+  const authToken = process.env.TURSO_AUTH_TOKEN || process.env.DATABASE_AUTH_TOKEN || '';
+
+  // Use LibSQL adapter for Vercel production or explicit remote Turso URLs
+  if (remoteUrl && (process.env.VERCEL || remoteUrl.startsWith('https://'))) {
+    try {
+      const libsql = createClient({
+        url: remoteUrl,
+        authToken: authToken || undefined,
+      });
+      const adapter = new PrismaLibSQL(libsql as any);
+      return new PrismaClient({
+        adapter,
+        log: ['error'],
+      });
+    } catch (e) {
+      console.warn('LibSQL client fallback to standard Prisma:', e);
+    }
   }
 
-  // Local SQLite development fallback
+  // Local SQLite fallback (dev.db)
   return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
