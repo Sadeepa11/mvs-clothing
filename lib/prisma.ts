@@ -21,7 +21,8 @@ const getTursoUrl = (): string => {
     if (c && typeof c === 'string') {
       const trimmed = c.trim();
       if (trimmed.startsWith('libsql://') || trimmed.startsWith('https://') || trimmed.startsWith('http://')) {
-        return trimmed;
+        // Convert libsql:// to https:// scheme for Vercel Serverless HTTP compatibility
+        return trimmed.replace(/^libsql:\/\//, 'https://');
       }
     }
   }
@@ -48,11 +49,12 @@ const getTursoAuthToken = (): string => {
 };
 
 const createPrismaClient = (): PrismaClient => {
+  const isVercel = Boolean(process.env.VERCEL);
   const remoteUrl = getTursoUrl();
   const authToken = getTursoAuthToken();
 
-  // Use LibSQL serverless adapter ONLY on Vercel deployment environment when remote URL is present
-  if (process.env.VERCEL && remoteUrl && remoteUrl.length > 10) {
+  // Use LibSQL adapter ONLY on Vercel deployment when valid remote URL is present
+  if (isVercel && remoteUrl && remoteUrl.startsWith('https://')) {
     try {
       const libsql = createClient({
         url: remoteUrl,
