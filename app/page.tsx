@@ -15,15 +15,16 @@ export default async function HomePage() {
     <div className="space-y-20 pb-20">
       {/* Hero Banner Section */}
       <section className="relative w-full min-h-[85vh] bg-[#111827] text-white flex items-center justify-center overflow-hidden">
-        {/* Background image overlay */}
-        <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
+        {/* Background Image Container */}
+        <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2000&auto=format&fit=crop"
             alt="MVS Clothing Luxury Lookbook"
             fill
             priority
-            className="object-cover object-center"
+            className="object-cover object-center opacity-75"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/40 to-black/30" />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-8 py-20">

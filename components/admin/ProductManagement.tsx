@@ -287,7 +287,7 @@ export default function ProductManagement({ initialProducts }: ProductManagement
                       <td className="p-4 text-right space-x-2">
                         <button
                           onClick={() => openEditModal(p)}
-                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                          className="p-1.5 text-gray-700 hover:text-black hover:bg-gray-100 rounded transition-colors"
                           title="Edit Product"
                         >
                           <Edit2 className="w-4 h-4" />

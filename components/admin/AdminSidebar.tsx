@@ -54,6 +54,8 @@ export default function AdminSidebar() {
       <div className="pt-6 border-t border-gray-800">
         <Link
           href="/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-gray-800 text-gray-200 hover:text-white hover:bg-gray-700 text-xs font-semibold uppercase tracking-wider rounded transition-colors"
         >
           <Store className="w-4 h-4 text-[#C5A880]" /> Return to Storefront

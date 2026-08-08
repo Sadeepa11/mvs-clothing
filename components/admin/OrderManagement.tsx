@@ -139,7 +139,7 @@ export default function OrderManagement({ initialOrders }: OrderManagementProps)
                               order.status === 'Delivered'
                                 ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                                 : order.status === 'Shipped'
-                                ? 'bg-blue-50 text-blue-800 border-blue-300'
+                                ? 'bg-slate-100 text-slate-800 border-slate-300'
                                 : order.status === 'Processing'
                                 ? 'bg-purple-50 text-purple-800 border-purple-300'
                                 : 'bg-amber-50 text-amber-800 border-amber-300'

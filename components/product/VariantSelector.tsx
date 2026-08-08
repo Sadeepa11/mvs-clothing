@@ -58,8 +58,13 @@ export default function VariantSelector({ product }: VariantSelectorProps) {
     imageList = ['https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1200&auto=format&fit=crop'];
   }
   const primaryImage = imageList[0] || '';
+  const [mounted, setMounted] = useState(false);
 
-  const inWishlist = isInWishlist(product.id);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const inWishlist = mounted ? isInWishlist(product.id) : false;
 
   const handleAddToCart = () => {
     if (!activeVariant || currentStock <= 0) return;

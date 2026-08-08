@@ -30,6 +30,11 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [isHovered, setIsHovered] = useState(false);
   const [addedAnimation, setAddedAnimation] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Parse images securely
   let imageList: string[] = [];
@@ -46,7 +51,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const variants = product.variants || [];
   const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
 
-  const inWishlist = isInWishlist(product.id);
+  const inWishlist = mounted ? isInWishlist(product.id) : false;
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();

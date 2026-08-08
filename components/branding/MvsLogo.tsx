@@ -11,15 +11,15 @@ export default function MvsLogo({
   variant = 'dark',
   size = 'md',
 }: MvsLogoProps) {
-  // Dimensions map
+  // Enhanced heights map for maximum visibility
   const heights = {
-    sm: 'h-6',
-    md: 'h-9',
-    lg: 'h-12',
-    xl: 'h-16',
+    sm: 'h-7',
+    md: 'h-10',
+    lg: 'h-14',
+    xl: 'h-20',
   };
 
-  // Color theme map
+  // Theme colors
   const mainColor =
     variant === 'light'
       ? '#F9FAFB'
@@ -29,68 +29,57 @@ export default function MvsLogo({
 
   const subColor =
     variant === 'light'
-      ? '#9CA3AF'
+      ? '#D1D5DB'
       : variant === 'gold'
-      ? '#E5D3B8'
-      : '#4B5563';
+      ? '#F3E8D8'
+      : '#374151';
 
-  const accentColor = '#C5A880'; // Warm Gold accent flourish
+  const goldAccent = '#C5A880';
 
   return (
     <div className={`inline-flex flex-col items-center justify-center select-none ${heights[size]} ${className}`}>
       <svg
-        viewBox="0 0 240 70"
+        viewBox="0 0 280 80"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-auto h-full"
         aria-label="MVS CLOTHING Logo"
       >
-        {/* Typographic "MVS" Interlocking Wordmark */}
-        <g transform="translate(10, 5)">
-          {/* M - Bold geometric strokes */}
-          <path
-            d="M 5 42 L 5 8 L 18 8 L 29 28 L 40 8 L 53 8 L 53 42 L 42 42 L 42 20 L 32 38 L 26 38 L 16 20 L 16 42 Z"
-            fill={mainColor}
-          />
-          {/* V - Diagonal interlock intersecting with M & S */}
-          <path
-            d="M 50 8 L 65 8 L 77 34 L 89 8 L 104 8 L 86 42 L 68 42 Z"
-            fill={mainColor}
-          />
-          {/* Accent Gold connection slash for high fashion feel */}
-          <path
-            d="M 66 12 L 72 12 L 61 36 L 55 36 Z"
-            fill={accentColor}
-            opacity="0.95"
-          />
-          {/* S - Sculpted high fashion curve */}
-          <path
-            d="M 125 15 C 125 10 118 7 110 7 C 100 7 94 12 94 18 C 94 28 124 25 124 35 C 124 40 116 43 107 43 C 96 43 90 38 89 31 L 99 31 C 100 34 103 36 108 36 C 114 36 117 34 117 31 C 117 24 87 26 87 17 C 87 10 96 5 109 5 C 122 5 129 10 130 15 Z"
-            fill={mainColor}
-          />
-        </g>
+        {/* Main Bold Typographic Wordmark: MVS */}
+        <text
+          x="140"
+          y="48"
+          textAnchor="middle"
+          fill={mainColor}
+          fontSize="48"
+          fontWeight="900"
+          letterSpacing="0.12em"
+          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+          style={{ textTransform: 'uppercase' }}
+        >
+          MVS
+        </text>
 
-        {/* Separator Accent Line */}
-        <line
-          x1="22"
-          y1="51"
-          x2="218"
-          y2="51"
-          stroke={accentColor}
-          strokeWidth="1.25"
-          strokeDasharray="4 2"
+        {/* Warm Gold Accent Underline */}
+        <rect
+          x="65"
+          y="56"
+          width="150"
+          height="2.5"
+          rx="1.25"
+          fill={goldAccent}
         />
 
-        {/* Sub-text: CLOTHING in wide tracked typography */}
+        {/* Sub-text: CLOTHING */}
         <text
-          x="120"
-          y="64"
+          x="140"
+          y="72"
           textAnchor="middle"
           fill={subColor}
-          fontSize="10"
-          fontWeight="600"
-          letterSpacing="0.45em"
-          fontFamily="system-ui, -apple-system, sans-serif"
+          fontSize="11"
+          fontWeight="700"
+          letterSpacing="0.48em"
+          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
         >
           CLOTHING
         </text>

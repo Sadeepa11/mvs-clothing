@@ -2,9 +2,17 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import MvsLogo from '@/components/branding/MvsLogo';
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Hide Footer completely on Admin panel pages
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <footer className="bg-[#111827] text-white border-t border-gray-800 pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +48,6 @@ export default function Footer() {
               <li><span className="text-gray-400 cursor-default">Complimentary Shipping & Returns</span></li>
               <li><span className="text-gray-400 cursor-default">Bespoke Size Guide</span></li>
               <li><span className="text-gray-[#C5A880] cursor-default">concierge@mvsclothing.com</span></li>
-              <li><Link href="/admin" className="text-[#C5A880] hover:underline font-medium">Admin Staff Access</Link></li>
             </ul>
           </div>
 

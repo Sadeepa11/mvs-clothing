@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShoppingBag, Heart, Search, Menu, X, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, Heart, Search, Menu, X } from 'lucide-react';
 import MvsLogo from '@/components/branding/MvsLogo';
 import { useStore } from '@/lib/store';
 
@@ -18,6 +18,11 @@ export default function Navbar() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Hide Navbar completely on Admin panel pages
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
 
   const totalCartItems = cart.reduce((total, item) => total + item.quantity, 0);
   const totalWishlistItems = wishlist.length;
@@ -37,8 +42,6 @@ export default function Navbar() {
       setIsSearchOpen(false);
     }
   };
-
-  const isAdminRoute = pathname.startsWith('/admin');
 
   return (
     <header className="sticky top-0 z-40 w-full bg-[#F9FAFB]/90 backdrop-blur-md border-b border-gray-200 transition-all duration-300">
@@ -149,15 +152,6 @@ export default function Navbar() {
                 </span>
               )}
             </button>
-
-            {/* Admin Switch Link */}
-            <Link
-              href={isAdminRoute ? '/' : '/admin'}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 text-xs uppercase tracking-wider font-semibold rounded-md border border-[#111827] text-[#111827] hover:bg-[#111827] hover:text-white transition-all"
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              {isAdminRoute ? 'Storefront' : 'Admin Panel'}
-            </Link>
           </div>
         </div>
       </div>
@@ -175,15 +169,6 @@ export default function Navbar() {
               {cat.name}
             </Link>
           ))}
-          <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
-            <Link
-              href="/admin"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-xs uppercase tracking-wider font-semibold text-[#111827] flex items-center gap-1"
-            >
-              <ShieldCheck className="w-4 h-4" /> Admin Portal
-            </Link>
-          </div>
         </div>
       )}
     </header>
