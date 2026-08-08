@@ -6,21 +6,53 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+const getTursoUrl = (): string => {
+  const env = process.env;
+  const candidates = [
+    env.TURSO_DATABASE_URL,
+    env.DATABASE_URL,
+    env.DATABASE_TURSO_DATABASE_URL,
+    env.DATABASE_DATABASE_URL,
+    env.TURSO_URL,
+    env.LIBSQL_URL,
+  ];
+
+  for (const c of candidates) {
+    if (c && typeof c === 'string') {
+      const trimmed = c.trim();
+      if (trimmed.startsWith('libsql://') || trimmed.startsWith('https://') || trimmed.startsWith('http://')) {
+        return trimmed;
+      }
+    }
+  }
+  return '';
+};
+
+const getTursoAuthToken = (): string => {
+  const env = process.env;
+  const candidates = [
+    env.TURSO_AUTH_TOKEN,
+    env.DATABASE_AUTH_TOKEN,
+    env.DATABASE_TURSO_AUTH_TOKEN,
+    env.DATABASE_DATABASE_AUTH_TOKEN,
+    env.TURSO_TOKEN,
+    env.LIBSQL_AUTH_TOKEN,
+  ];
+
+  for (const c of candidates) {
+    if (c && typeof c === 'string' && c.trim().length > 0) {
+      return c.trim();
+    }
+  }
+  return '';
+};
+
 const createPrismaClient = (): PrismaClient => {
-  const tursoUrl = process.env.TURSO_DATABASE_URL || '';
-  const databaseUrl = process.env.DATABASE_URL || '';
+  const remoteUrl = getTursoUrl();
+  const authToken = getTursoAuthToken();
 
-  // Detect remote Turso/LibSQL URL
-  const remoteUrl = tursoUrl.startsWith('libsql://') || tursoUrl.startsWith('https://')
-    ? tursoUrl
-    : (databaseUrl.startsWith('libsql://') || databaseUrl.startsWith('https://'))
-    ? databaseUrl
-    : '';
-
-  const authToken = process.env.TURSO_AUTH_TOKEN || process.env.DATABASE_AUTH_TOKEN || '';
-
-  // Use LibSQL adapter for Vercel production or explicit remote Turso URLs
-  if (remoteUrl && (process.env.VERCEL || remoteUrl.startsWith('https://'))) {
+  // Use LibSQL serverless adapter ONLY on Vercel deployment environment when remote URL is present
+  if (process.env.VERCEL && remoteUrl && remoteUrl.length > 10) {
     try {
       const libsql = createClient({
         url: remoteUrl,
@@ -32,11 +64,11 @@ const createPrismaClient = (): PrismaClient => {
         log: ['error'],
       });
     } catch (e) {
-      console.warn('LibSQL client fallback to standard Prisma:', e);
+      console.warn('LibSQL client initialization failed, falling back to standard Prisma:', e);
     }
   }
 
-  // Local SQLite fallback (dev.db)
+  // Local development & local build fallback to local SQLite (file:./dev.db)
   return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
